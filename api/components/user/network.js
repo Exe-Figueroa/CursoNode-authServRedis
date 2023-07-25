@@ -1,5 +1,6 @@
 const express = require('express');
 
+const secure = require('./secure.js');
 const response = require('../../../network/response');
 const Controller = require('./index');
 
@@ -9,17 +10,15 @@ const router = express.Router();
 router.get('/', list)
 router.get('/:id', get);
 router.post('/', upsert);
-router.put('/', upsert);
+router.put('/', secure('update') ,upsert);
 
 // Internal functions
-function list(req, res) {
+function list(req, res, next) {
   Controller.list()
     .then((lista) => {
       response.success(req, res, lista, 200);
     })
-    .catch((err) => {
-      response.error(req, res, err.message, 500);
-    });
+    .catch(next);
 }
 
 function get(req, res) {
@@ -27,9 +26,7 @@ function get(req, res) {
     .then((user) => {
       response.success(req, res, user, 200);
     })
-    .catch((err) => {
-      response.error(req, res, err.message, 500);
-    });
+    .catch(next);
 }
 
 function upsert(req, res) {
@@ -37,9 +34,7 @@ function upsert(req, res) {
     .then((user) => {
       response.success(req, res, user, 201);
     })
-    .catch((err) => {
-      response.error(req, res, err.message, 500);
-    });
+    .catch(next);
 }
 
 module.exports = router;
