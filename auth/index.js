@@ -21,6 +21,10 @@ const check = {
             throw err('You can`t this', 401);
         }
     },
+    logged: function(req, owner) {
+        const decoded = decodeHeader(req);
+
+    },
 }
 
 function getToken(auth) {
